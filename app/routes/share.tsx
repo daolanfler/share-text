@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "../components/ui/button";
-import { Form } from "react-router";
+import { Form, redirect } from "react-router";
 import { Textarea } from "../components/ui/textarea";
 import { useNavigate } from "react-router";
 import { redis } from "~/lib/redis";
@@ -13,8 +13,7 @@ export async function action({ request }: { request: Request }) {
 
     const id = generateId();
     await redis.set(id, text, { ex: 24 * 60 * 60 });
-    
-    return { success: true, id };
+    return redirect(`/share/t/${id}`);
 }
 
 export default function SharePage() {
