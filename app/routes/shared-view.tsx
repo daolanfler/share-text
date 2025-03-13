@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useLoaderData } from "react-router";
 import { redis } from "~/lib/redis";
 import { Copy, Check } from "lucide-react";
 import { Button } from "~/components/ui/button";

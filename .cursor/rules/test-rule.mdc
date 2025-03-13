@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## Format 
+
+- indent with 4 spaces 
+- respect the rules in .editorconfig
