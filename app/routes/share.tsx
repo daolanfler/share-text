@@ -1,15 +1,28 @@
 import * as React from "react";
 import { Button } from "../components/ui/button";
-import { Form, redirect } from "react-router";
+import { Form, redirect, useNavigation, useActionData } from "react-router";
 import { Textarea } from "../components/ui/textarea";
-import { useNavigate } from "react-router";
 import { redis } from "~/lib/redis";
 import { generateId } from "~/lib/utils";
 
 export async function action({ request }: { request: Request }) {
     let formData = await request.formData();
     const text = formData.get("text");
-    console.log(text);
+
+    // Server-side validation
+    if (!text || typeof text !== "string" || !text.trim()) {
+        return new Response(
+            JSON.stringify({
+                error: "Text cannot be empty or contain only whitespace",
+            }),
+            {
+                status: 400,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+    }
 
     const id = generateId();
     await redis.set(id, text, { ex: 24 * 60 * 60 });
@@ -18,34 +31,8 @@ export async function action({ request }: { request: Request }) {
 
 export default function SharePage() {
     const [text, setText] = React.useState("");
-    const [isSharing, setIsSharing] = React.useState(false);
-    const navigate = useNavigate();
-
-    const handleShare = async () => {
-        try {
-            setIsSharing(true);
-            const response = await fetch("/share", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ text }),
-            });
-
-            const result = await response.json();
-            if (!result.success) {
-                throw new Error(result.error);
-            }
-
-            // Navigate to the shared text page
-            navigate(`/t/${result.id}`);
-        } catch (error) {
-            console.error("Failed to share text:", error);
-            alert("Failed to share text. Please try again.");
-        } finally {
-            setIsSharing(false);
-        }
-    };
+    const navigation = useNavigation();
+    const actionData = useActionData<{ error: string }>();
 
     return (
         <div className="container max-w-2xl py-12 mx-auto">
@@ -61,16 +48,22 @@ export default function SharePage() {
                         }
                         className="min-h-[200px]"
                     />
+                    {actionData?.error && (
+                        <div className="text-sm text-red-500">
+                            {actionData.error}
+                        </div>
+                    )}
                     <div className="flex justify-end">
                         <Button
                             type="submit"
-                            // onClick={handleShare}
                             size="lg"
                             variant="default"
                             className="px-8"
-                            // disabled={!text.trim() || isSharing}
+                            disabled={navigation.state === "submitting"}
                         >
-                            {isSharing ? "Sharing..." : "Share"}
+                            {navigation.state === "submitting"
+                                ? "Sharing..."
+                                : "Share"}
                         </Button>
                     </div>
                 </div>
