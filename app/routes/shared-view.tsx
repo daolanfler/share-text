@@ -1,10 +1,10 @@
+import { Check, Copy, Home, Link } from "lucide-react";
 import * as React from "react";
-import { redis } from "~/lib/redis";
-import { Copy, Check, Link, Home } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { toast } from "sonner";
-import type { Route } from "./+types/shared-view";
 import { Link as RouterLink } from "react-router";
+import { toast } from "sonner";
+import { Button } from "~/components/ui/button";
+import { redis } from "~/lib/redis";
+import type { Route } from "./+types/shared-view";
 
 export async function loader({ params }: { params: { id: string } }) {
     try {

@@ -1,12 +1,12 @@
 import * as React from "react";
-import { Button } from "../components/ui/button";
-import { Form, redirect, useNavigation, useActionData } from "react-router";
-import { Textarea } from "../components/ui/textarea";
+import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { redis } from "~/lib/redis";
 import { generateId } from "~/lib/utils";
+import { Button } from "../components/ui/button";
+import { Textarea } from "../components/ui/textarea";
 
 export async function action({ request }: { request: Request }) {
-    let formData = await request.formData();
+    const formData = await request.formData();
     const text = formData.get("text");
 
     // Server-side validation
@@ -20,7 +20,7 @@ export async function action({ request }: { request: Request }) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-            }
+            },
         );
     }
 
@@ -54,9 +54,9 @@ export default function SharePage() {
                                     name="text"
                                     placeholder="在这里输入你想分享的文本..."
                                     value={text}
-                                    onChange={(
-                                        e: React.ChangeEvent<HTMLTextAreaElement>
-                                    ) => setText(e.target.value)}
+                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                                        setText(e.target.value)
+                                    }
                                     className="min-h-[200px] sm:min-h-[300px] resize-y text-base"
                                 />
                                 {actionData?.error && (
@@ -86,8 +86,7 @@ export default function SharePage() {
                                             disabled:active:scale-100
                                         `}
                                         disabled={
-                                            navigation.formAction === "/?index" ||
-                                            !text.trim()
+                                            navigation.formAction === "/?index" || !text.trim()
                                         }
                                     >
                                         {navigation.formAction === "/?index" ? (
