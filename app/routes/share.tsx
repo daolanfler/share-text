@@ -48,7 +48,7 @@ export default function SharePage() {
                     </div>
 
                     <div className="dark:bg-gray-800 overflow-hidden bg-white rounded-lg shadow-lg">
-                        <Form method="post" className="sm:p-6 p-4" action="/?index">
+                        <Form method="post" className="sm:p-6 p-4">
                             <div className="space-y-4">
                                 <Textarea
                                     name="text"
@@ -85,11 +85,9 @@ export default function SharePage() {
                                             disabled:hover:bg-blue-600 dark:disabled:hover:bg-blue-500
                                             disabled:active:scale-100
                                         `}
-                                        disabled={
-                                            navigation.formAction === "/?index" || !text.trim()
-                                        }
+                                        disabled={navigation.state === "submitting" || !text.trim()}
                                     >
-                                        {navigation.formAction === "/?index" ? (
+                                        {navigation.state === "submitting" ? (
                                             <span className="flex items-center gap-2">
                                                 <span className="border-t-transparent animate-spin w-4 h-4 border-2 border-white rounded-full" />
                                                 分享中...
