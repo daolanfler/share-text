@@ -3,20 +3,19 @@ import * as React from "react";
 import { Link as RouterLink } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
-import { redis } from "~/lib/redis";
+import { getText } from "~/lib/storage";
 import type { Route } from "./+types/shared-view";
 
 export async function loader({ params }: { params: { id: string } }) {
     try {
-        const text = await redis.get<string>(params.id);
+        const text = await getText(params.id);
         if (!text) {
             throw new Error("Text not found or has expired");
         }
 
         return { text };
     } catch (error) {
-        console.error("Failed to get text:", error);
-        throw new Error("Failed to load text");
+        throw new Error("Failed to load text", { cause: error });
     }
 }
 
@@ -36,8 +35,8 @@ export default function SharedTextPage({ loaderData }: Route.ComponentProps) {
                 richColors: true,
                 duration: 1000,
             });
-        } catch (err) {
-            console.error("复制失败: ", err);
+        } catch {
+            toast.error("复制失败，请重试");
         }
     };
 
@@ -51,8 +50,8 @@ export default function SharedTextPage({ loaderData }: Route.ComponentProps) {
                 richColors: true,
                 duration: 1000,
             });
-        } catch (err) {
-            console.error("Failed to copy link:", err);
+        } catch {
+            toast.error("复制链接失败，请重试");
         }
     };
 

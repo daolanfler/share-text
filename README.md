@@ -44,6 +44,20 @@ npm run build
 
 ## Deployment
 
+### Environment variables
+
+The application stores shared text in a Cloudflare Workers KV namespace through a small
+authenticated Worker API. Configure these variables in the Vercel project:
+
+```text
+CLOUDFLARE_STORAGE_URL=https://share-text-storage-api.daolanfler.workers.dev
+CLOUDFLARE_STORAGE_TOKEN=<the same API_TOKEN secret configured on the Worker>
+```
+
+The Worker source and its KV binding configuration live in `cloudflare/`. Its `API_TOKEN`
+must be configured as a Cloudflare secret and must never be committed to the repository.
+Deploy Worker changes with `pnpm worker:deploy`.
+
 ### Docker Deployment
 
 To build and run using Docker:

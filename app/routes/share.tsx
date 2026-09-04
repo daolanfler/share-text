@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
-import { redis } from "~/lib/redis";
+import { saveText } from "~/lib/storage";
 import { generateId } from "~/lib/utils";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
@@ -25,7 +25,7 @@ export async function action({ request }: { request: Request }) {
     }
 
     const id = generateId();
-    await redis.set(id, text, { ex: 24 * 60 * 60 });
+    await saveText(id, text);
     return redirect(`/share/t/${id}`);
 }
 

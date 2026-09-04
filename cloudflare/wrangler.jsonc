@@ -1,0 +1,12 @@
+{
+    "$schema": "../node_modules/wrangler/config-schema.json",
+    "name": "share-text-storage-api",
+    "main": "worker.js",
+    "compatibility_date": "2026-09-04",
+    "kv_namespaces": [
+        {
+            "binding": "TEXTS",
+            "id": "99cd03df6c7345d485c9b0275dc63d63"
+        }
+    ]
+}
