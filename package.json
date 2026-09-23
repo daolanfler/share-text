@@ -12,6 +12,7 @@
         "start": "react-router-serve ./build/server/index.js",
         "typecheck": "react-router typegen && tsc",
         "lint": "oxlint .",
+        "test:worker": "node --test cloudflare/worker.test.mjs",
         "worker:deploy": "wrangler deploy --config cloudflare/wrangler.jsonc"
     },
     "dependencies": {

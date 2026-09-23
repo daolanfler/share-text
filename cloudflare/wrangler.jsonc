@@ -3,6 +3,20 @@
     "name": "share-text-storage-api",
     "main": "worker.js",
     "compatibility_date": "2026-09-04",
+    "durable_objects": {
+        "bindings": [
+            {
+                "name": "ONE_TIME_TEXTS",
+                "class_name": "OneTimeText"
+            }
+        ]
+    },
+    "exports": {
+        "OneTimeText": {
+            "type": "durable-object",
+            "storage": "sqlite"
+        }
+    },
     "kv_namespaces": [
         {
             "binding": "TEXTS",

@@ -1,3 +1,9 @@
+export type SharedText =
+    | { kind: "regular"; text: string }
+    | { kind: "one-time" };
+
+const oneTimeIdPattern = /^once-[0-9a-f]{32}$/;
+
 function requireEnv(name: string) {
     const value = process.env[name];
     if (!value) {
@@ -12,6 +18,7 @@ const storageToken = requireEnv("CLOUDFLARE_STORAGE_TOKEN");
 async function request(path: string, init?: RequestInit) {
     const response = await fetch(`${storageUrl.replace(/\/$/, "")}${path}`, {
         ...init,
+        cache: "no-store",
         headers: {
             Authorization: `Bearer ${storageToken}`,
             ...init?.headers,
@@ -38,7 +45,20 @@ export async function saveText(id: string, text: string) {
     }
 }
 
-export async function getText(id: string) {
+export async function getText(id: string): Promise<SharedText | null> {
     const response = await request(`/v1/text/${encodeURIComponent(id)}`);
+    if (response.status === 404) return null;
+
+    return oneTimeIdPattern.test(id)
+        ? response.json()
+        : { kind: "regular", text: await response.text() };
+}
+
+export async function consumeText(id: string): Promise<string | null> {
+    if (!oneTimeIdPattern.test(id)) return null;
+
+    const response = await request(`/v1/text/${encodeURIComponent(id)}/consume`, {
+        method: "POST",
+    });
     return response.status === 404 ? null : response.text();
 }

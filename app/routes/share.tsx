@@ -6,6 +6,7 @@ import { generateId } from "~/lib/utils";
 export async function action({ request }: { request: Request }) {
     const formData = await request.formData();
     const text = formData.get("text");
+    const oneTime = formData.get("oneTime") === "yes";
 
     // Server-side validation
     if (!text || typeof text !== "string" || !text.trim()) {
@@ -22,13 +23,14 @@ export async function action({ request }: { request: Request }) {
         );
     }
 
-    const id = generateId();
+    const id = oneTime ? `once-${crypto.randomUUID().replaceAll("-", "")}` : generateId();
     await saveText(id, text);
     return redirect(`/share/t/${id}`);
 }
 
 export default function SharePage() {
     const [text, setText] = React.useState("");
+    const [oneTime, setOneTime] = React.useState(false);
     const navigation = useNavigation();
     const actionData = useActionData<{ error: string }>();
     const isSharing = navigation.state !== "idle";
@@ -65,10 +67,23 @@ export default function SharePage() {
                         {actionData.error}
                     </p>
                 )}
+                <div className="share-options">
+                    <label className="checkbox-label">
+                        <input
+                            type="checkbox"
+                            name="oneTime"
+                            value="yes"
+                            checked={oneTime}
+                            onChange={(event) => setOneTime(event.target.checked)}
+                            disabled={isSharing}
+                        />
+                        阅后即焚（仅可查看一次）
+                    </label>
+                </div>
                 <div className="form-actions">
                     <p id="sharing-note" className="expiry-note">
                         <span className="expiry-value">24h</span>
-                        链接有效期为 24 小时
+                        {oneTime ? "确认查看后失效，未查看时 24 小时后过期" : "链接有效期为 24 小时"}
                     </p>
                     <button
                         type="submit"

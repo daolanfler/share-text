@@ -124,6 +124,10 @@ h1 {
 }
 .shared-text:focus-visible { outline-offset: -3px; }
 
+.share-options { margin-top: 16px; }
+.checkbox-label { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ink); font-size: 13px; cursor: pointer; }
+.checkbox-label input { width: 16px; height: 16px; flex: none; margin: 0; accent-color: var(--accent); cursor: pointer; }
+
 .form-actions {
     display: flex;
     align-items: center;
@@ -173,6 +177,11 @@ h1 {
 .copy-status { min-height: 24px; margin: 16px 0 0; color: var(--muted); font-size: 13px; text-align: right; }
 .copy-status.error-message { color: var(--error); }
 
+.confirmation { max-width: 480px; padding-block: 24px; }
+.confirmation h1 { font-size: 26px; letter-spacing: 0; }
+.confirmation-description { margin: 16px 0 24px; color: var(--muted); line-height: 1.9; }
+.read-once-note { margin: 16px 0 0; color: var(--muted); font-size: 13px; }
+
 
 .unavailable { padding-block: 24px 48px; }
 .unavailable > p { max-width: 480px; margin: 16px 0 28px; color: var(--muted); line-height: 1.9; }
@@ -191,11 +200,13 @@ h1 {
     .page-heading { margin-bottom: 24px; }
     .surface-toolbar { padding-inline: 18px; min-height: 52px; }
     .text-editor { min-height: 300px; padding: 18px; }
-    .form-actions { gap: 12px; margin-top: 18px; }
+    .form-actions { flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+    .form-actions > .button { flex-shrink: 0; margin-left: auto; }
     .expiry-note { gap: 7px; font-size: 11px; }
     .button { min-width: 92px; padding-inline: 16px; gap: 14px; }
     .privacy-note { max-width: 30em; line-height: 1.8; }
     .reader { margin-top: 24px; }
     .copy-actions { display: grid; grid-template-columns: 1fr 1fr; }
+    .copy-actions:has(> :only-child) { grid-template-columns: 1fr; }
     .copy-status { text-align: left; }
 }
