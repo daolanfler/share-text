@@ -3,6 +3,13 @@
     "name": "share-text-storage-api",
     "main": "worker.js",
     "compatibility_date": "2026-09-04",
+    "preview_urls": false,
+    "observability": {
+        "enabled": true,
+        "logs": {
+            "enabled": true
+        }
+    },
     "durable_objects": {
         "bindings": [
             {
